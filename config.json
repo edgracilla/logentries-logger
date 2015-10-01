@@ -1,0 +1,19 @@
+[
+  {
+	"name": "token",
+	"label": "Token",
+	"type": "String",
+	"required": true
+  },
+  {
+	"name": "loglevel",
+	"label": "Log Level", //debug, info, notice, warning, err, crit, alert, emerg
+	"type": "String",
+	"required": true
+  }
+
+]
+
+
+
+
