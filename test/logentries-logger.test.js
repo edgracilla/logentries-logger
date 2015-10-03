@@ -4,11 +4,16 @@ var cp     = require('child_process'),
 	should = require('should'),
 	logger;
 
-describe('Logger', function () {
+describe('Logentries Logger', function () {
 	this.slow(5000);
 
-	after('terminate child process', function () {
-		logger.kill('SIGKILL');
+	after('terminate child process', function (done) {
+		this.timeout(3000);
+
+		setTimeout(function () {
+			logger.kill('SIGKILL');
+			done();
+		}, 2000);
 	});
 
 	describe('#spawn', function () {
@@ -42,21 +47,13 @@ describe('Logger', function () {
 
 	describe('#log', function () {
 		it('should process the log data', function (done) {
-			this.timeout(3000);
-
 			logger.send({
 				type: 'log',
 				data: {
 					title: 'Sample Log Title',
 					description: 'Sample Log Data'
 				}
-			}, function (error) {
-				should.ifError(error);
-			});
-
-			setTimeout(function () {
-				done();
-			}, 2000);
+			}, done);
 		});
 	});
 });
