@@ -1,39 +1,30 @@
 'use strict';
 
-var platform    = require('./platform'),
-	logger = require('le_node'),
-	log, loglevel;
+var platform = require('./platform'),
+	Logger   = require('le_node'),
+	logger, loglevel;
+
+/*
+ * Listen for the data event.
+ */
+platform.on('log', function (logData) {
+	logger.log(loglevel, logData);
+});
 
 /*
  * Listen for the ready event.
  */
 platform.once('ready', function (options) {
+	loglevel = options.loglevel || 'debug';
 
-	try { //added try catch since there is no callback for the logger initialization
-		 log = new logger({ token: options.token });
+	logger = new Logger({
+		token: options.token
+	});
 
-		 log.on('error', function(err) {
-			 console.error('Error on Logentries.', err);
-			 platform.handleException(err);
-		 });
-
-		loglevel = options.loglevel;
-
-		platform.log('Connected to Logentries.');
-		platform.notifyReady(); // Need to notify parent process that initialization of this plugin is done.
-
-	} catch (error) {
+	logger.on('error', function (error) {
 		console.error('Error on Logentries.', error);
 		platform.handleException(error);
-	}
+	});
 
-});
-
-/*
- * Listen for the data event.
- */
-platform.on('data', function (data) {
-
-	log.log(loglevel, data);
-
+	platform.notifyReady();
 });
