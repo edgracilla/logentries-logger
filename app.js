@@ -2,6 +2,7 @@
 
 var platform = require('./platform'),
 	Logger   = require('le_node'),
+	config   = require('./config.json'),
 	logger, loglevel;
 
 /*
@@ -15,7 +16,7 @@ platform.on('log', function (logData) {
  * Listen for the ready event.
  */
 platform.once('ready', function (options) {
-	loglevel = options.loglevel || 'debug';
+	loglevel = options.loglevel || config.loglevel.default;
 
 	logger = new Logger({
 		token: options.token
