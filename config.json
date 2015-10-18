@@ -9,6 +9,7 @@
 	"label": "Log Level",
 	"type": "String",
 	"required": false,
+	"enum": ["debug", "info", "notice", "warning", "err", "crit", "alert", "emerg"],
 	"default": "debug",
 	"help": "(Optional) Specify the default log level for logs."
   }
