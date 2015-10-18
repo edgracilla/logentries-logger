@@ -36,7 +36,7 @@ describe('Logentries Logger', function () {
 				data: {
 					options: {
 						token: '1cc71fff-6476-41cd-b365-e8b8914418c5',
-						loglevel: 'debug'
+						log_level: 'debug'
 					}
 				}
 			}, function (error) {
