@@ -3,20 +3,20 @@
 var platform = require('./platform'),
 	Logger   = require('le_node'),
 	config   = require('./config.json'),
-	logger, loglevel;
+	logger, level;
 
 /*
  * Listen for the data event.
  */
 platform.on('log', function (logData) {
-	logger.log(loglevel, logData);
+	logger.log(level, logData);
 });
 
 /*
  * Listen for the ready event.
  */
 platform.once('ready', function (options) {
-	loglevel = options.loglevel || config.loglevel.default;
+	level = options.log_level || config.log_level.default;
 
 	logger = new Logger({
 		token: options.token
