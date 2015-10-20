@@ -1,11 +1,13 @@
 'use strict';
 
+const TOKEN = '486716ac-0b6a-40e5-b03d-fe82129948c2';
+
 var cp     = require('child_process'),
 	should = require('should'),
 	logger;
 
 describe('Logentries Logger', function () {
-	this.slow(5000);
+	this.slow(8000);
 
 	after('terminate child process', function (done) {
 		this.timeout(3000);
@@ -23,8 +25,8 @@ describe('Logentries Logger', function () {
 	});
 
 	describe('#handShake', function () {
-		it('should notify the parent process when ready within 5 seconds', function (done) {
-			this.timeout(5000);
+		it('should notify the parent process when ready within 8 seconds', function (done) {
+			this.timeout(8000);
 
 			logger.on('message', function (message) {
 				if (message.type === 'ready')
@@ -35,8 +37,7 @@ describe('Logentries Logger', function () {
 				type: 'ready',
 				data: {
 					options: {
-						token: '1cc71fff-6476-41cd-b365-e8b8914418c5',
-						log_level: 'debug'
+						token: TOKEN
 					}
 				}
 			}, function (error) {

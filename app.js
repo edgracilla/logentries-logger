@@ -28,6 +28,5 @@ platform.once('ready', function (options) {
 		platform.handleException(error);
 	});
 
-	platform.log('Logentries Logger has been initialized.');
 	platform.notifyReady();
 });
