@@ -1,7 +1,7 @@
 {
   "name": "logentries-logger",
   "description": "Logentries Logger Plugin for the Reekoh IoT Platform",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "Reekoh, Inc.",
   "main": "app.js",
   "scripts": {
@@ -12,7 +12,6 @@
     "url": "https://github.com/Reekoh/logentries-logger"
   },
   "dependencies": {
-    "is-json": "^1.2.5",
     "le_node": "^1.1.0"
   },
   "devDependencies": {
