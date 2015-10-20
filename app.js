@@ -1,8 +1,6 @@
 'use strict';
 
 var platform = require('./platform'),
-	Logger   = require('le_node'),
-	config   = require('./config.json'),
 	logger, level;
 
 /*
@@ -16,6 +14,9 @@ platform.on('log', function (logData) {
  * Listen for the ready event.
  */
 platform.once('ready', function (options) {
+	var Logger = require('le_node'),
+		config = require('./config.json');
+
 	level = options.log_level || config.log_level.default;
 
 	logger = new Logger({
@@ -27,5 +28,6 @@ platform.once('ready', function (options) {
 		platform.handleException(error);
 	});
 
+	platform.log('Logentries Logger has been initialized.');
 	platform.notifyReady();
 });
