@@ -1,6 +1,7 @@
 'use strict';
 
-var platform = require('./platform'),
+var Logger   = require('le_node'),
+	platform = require('./platform'),
 	logger, level;
 
 /*
@@ -11,11 +12,18 @@ platform.on('log', function (logData) {
 });
 
 /*
+ * Event to listen to in order to gracefully release all resources bound to this service.
+ */
+platform.on('close', function () {
+	logger.closeConnection();
+	platform.notifyClose();
+});
+
+/*
  * Listen for the ready event.
  */
 platform.once('ready', function (options) {
-	var Logger = require('le_node'),
-		config = require('./config.json');
+	var config = require('./config.json');
 
 	level = options.log_level || config.log_level.default;
 
