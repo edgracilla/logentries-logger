@@ -1,6 +1,7 @@
 'use strict';
 
 var Logger   = require('le_node'),
+	isJSON   = require('is-json'),
 	platform = require('./platform'),
 	logger, level;
 
@@ -8,7 +9,10 @@ var Logger   = require('le_node'),
  * Listen for the data event.
  */
 platform.on('log', function (logData) {
-	logger.log(level, logData);
+	if (isJSON(logData))
+		logger.log(level, JSON.parse(logData));
+	else
+		logger.log(level, logData);
 });
 
 /*
