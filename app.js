@@ -19,7 +19,13 @@ platform.on('log', function (logData) {
  * Event to listen to in order to gracefully release all resources bound to this service.
  */
 platform.on('close', function () {
-	logger.closeConnection();
+	try {
+		logger.closeConnection();
+	}
+	catch (error) {
+		platform.handleException(error);
+	}
+
 	platform.notifyClose();
 });
 
