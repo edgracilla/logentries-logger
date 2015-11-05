@@ -47,13 +47,22 @@ describe('Logentries Logger', function () {
 	});
 
 	describe('#log', function () {
-		it('should process the log data', function (done) {
+		it('should process JSON log data', function (done) {
 			logger.send({
 				type: 'log',
-				data: {
+				data: JSON.stringify({
 					title: 'Sample Log Title',
 					description: 'Sample Log Data'
-				}
+				})
+			}, done);
+		});
+	});
+
+	describe('#log', function () {
+		it('should process String log data', function (done) {
+			logger.send({
+				type: 'log',
+				data: 'Sample Log Data'
 			}, done);
 		});
 	});
