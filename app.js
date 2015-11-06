@@ -19,14 +19,19 @@ platform.on('log', function (logData) {
  * Event to listen to in order to gracefully release all resources bound to this service.
  */
 platform.on('close', function () {
-	try {
-		logger.closeConnection();
-	}
-	catch (error) {
-		platform.handleException(error);
-	}
+	var domain = require('domain');
+	var d = domain.create();
 
-	platform.notifyClose();
+	d.on('error', function(error) {
+		console.error(error);
+		platform.handleException(error);
+		platform.notifyClose();
+	});
+
+	d.run(function() {
+		logger.closeConnection();
+		platform.notifyClose();
+	});
 });
 
 /*
