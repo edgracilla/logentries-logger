@@ -1,7 +1,6 @@
 'use strict';
 
-var Logger   = require('le_node'),
-	isJSON   = require('is-json'),
+var domain   = require('domain'),
 	platform = require('./platform'),
 	logger, level;
 
@@ -9,28 +8,45 @@ var Logger   = require('le_node'),
  * Listen for the data event.
  */
 platform.on('log', function (logData) {
-	if (isJSON(logData))
-		logger.log(level, JSON.parse(logData));
-	else
+	var d = domain.create();
+
+	d.once('error', function () {
 		logger.log(level, logData);
+		d.exit();
+	});
+
+	d.run(function () {
+		logData = JSON.parse(logData);
+
+		var logLevel = level;
+
+		if (logData.level) {
+			logLevel = logData.level;
+			delete logData.level;
+		}
+
+		logger.log(logLevel, JSON.parse(logData));
+		d.exit();
+	});
 });
 
 /*
  * Event to listen to in order to gracefully release all resources bound to this service.
  */
 platform.on('close', function () {
-	var domain = require('domain');
 	var d = domain.create();
 
-	d.on('error', function(error) {
+	d.once('error', function (error) {
 		console.error(error);
 		platform.handleException(error);
 		platform.notifyClose();
+		d.exit();
 	});
 
-	d.run(function() {
+	d.run(function () {
 		logger.closeConnection();
 		platform.notifyClose();
+		d.exit();
 	});
 });
 
@@ -38,7 +54,8 @@ platform.on('close', function () {
  * Listen for the ready event.
  */
 platform.once('ready', function (options) {
-	var config = require('./config.json');
+	var Logger = require('le_node'),
+		config = require('./config.json');
 
 	level = options.log_level || config.log_level.default;
 
