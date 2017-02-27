@@ -1,72 +1,59 @@
-'use strict';
+'use strict'
 
-var domain   = require('domain'),
-	platform = require('./platform'),
-	logger, level;
+const reekoh = require('reekoh')
+const domain = require('domain')
+const _plugin = new reekoh.plugins.Logger()
 
-/*
- * Listen for the data event.
- */
-platform.on('log', function (logData) {
-	var d = domain.create();
+let loggentriesLogger = null
+let level = null
 
-	d.once('error', function () {
-		logger.log(level, logData);
-		d.exit();
-	});
+_plugin.on('log', (logData) => {
+  let d = domain.create()
 
-	d.run(function () {
-		logData = JSON.parse(logData);
+  d.once('error', (error) => {
+    console.log(error)
+    loggentriesLogger.log(level, logData)
+    d.exit()
+  })
 
-		var logLevel = level;
+  d.run(() => {
+    let logLevel = level
 
-		if (logData.level) {
-			logLevel = logData.level;
-			delete logData.level;
-		}
+    if (logData.level) {
+      logLevel = logData.level
+      delete logData.level
+    }
 
-		logger.log(logLevel, JSON.parse(logData));
-		d.exit();
-	});
-});
+    loggentriesLogger.log(logLevel, logData, (error) => {
+      if (error) {
+        console.error('Error on Loggentries.', error)
+        _plugin.logException(error)
+      }
+      _plugin.log(JSON.stringify({
+        title: 'Log sent to Loggentries',
+        data: logData
+      }))
+    })
+    d.exit()
+  })
+})
 
-/*
- * Event to listen to in order to gracefully release all resources bound to this service.
- */
-platform.on('close', function () {
-	var d = domain.create();
+_plugin.once('ready', () => {
+  const Logger = require('le_node')
 
-	d.once('error', function (error) {
-		console.error(error);
-		platform.handleException(error);
-		platform.notifyClose();
-		d.exit();
-	});
+  level = _plugin.config.logLevel || 'info'
 
-	d.run(function () {
-		logger.closeConnection();
-		platform.notifyClose();
-		d.exit();
-	});
-});
+  loggentriesLogger = new Logger({
+    token: _plugin.config.token
+  })
 
-/*
- * Listen for the ready event.
- */
-platform.once('ready', function (options) {
-	var Logger = require('le_node'),
-		config = require('./config.json');
+  loggentriesLogger.on('error', (error) => {
+    console.error('Error on Logentries.', error)
+    _plugin.logException(error)
+  })
 
-	level = options.log_level || config.log_level.default;
+  _plugin.log('Logentries has been initialized.')
+  _plugin.emit('init')
+})
 
-	logger = new Logger({
-		token: options.token
-	});
-
-	logger.on('error', function (error) {
-		console.error('Error on Logentries.', error);
-		platform.handleException(error);
-	});
-
-	platform.notifyReady();
-});
+module.exports = _plugin
