@@ -1,16 +1,16 @@
 {
   "token": {
-	"label": "Token",
-	"type": "Password",
-	"required": true,
-	"help": "Specify your LogEntries token."
+    "label": "Token",
+    "type": "Password",
+    "required": true,
+    "help": "Specify your LogEntries token."
   },
-  "log_level": {
-	"label": "Log Level",
-	"type": "String",
-	"required": false,
-	"enum": ["debug", "info", "notice", "warning", "err", "crit", "alert", "emerg"],
-	"default": "debug",
-	"help": "(Optional) Specify the default log level for logs."
+  "logLevel": {
+    "label": "Log Level",
+    "type": "String",
+    "required": false,
+    "enum": ["debug", "info", "notice", "warning", "err", "crit", "alert", "emerg"],
+    "default": "debug",
+    "help": "(Optional) Specify the default log level for logs."
   }
 }

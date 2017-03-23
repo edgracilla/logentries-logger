@@ -10,7 +10,7 @@ Logentries Logger Plugin for the Reekoh IoT Platform. Connects a Reekoh instance
 ## Configuration Parameters
 
 * Token (String) - The Logentries token to use for sending log data.
-* *Log Level (String) - Optional, the default log level to use. Default: debug* 
+* *Log Level (String) - Optional, the default log level to use. Default: debug*
 
 ## Input Data
 
