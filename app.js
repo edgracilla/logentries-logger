@@ -2,12 +2,12 @@
 
 const reekoh = require('reekoh')
 const domain = require('domain')
-const _plugin = new reekoh.plugins.Logger()
+const plugin = new reekoh.plugins.Logger()
 
 let loggentriesLogger = null
 let level = null
 
-_plugin.on('log', (logData) => {
+plugin.on('log', (logData) => {
   let d = domain.create()
 
   d.once('error', (error) => {
@@ -27,9 +27,9 @@ _plugin.on('log', (logData) => {
     loggentriesLogger.log(logLevel, logData, (error) => {
       if (error) {
         console.error('Error on Loggentries.', error)
-        _plugin.logException(error)
+        plugin.logException(error)
       }
-      _plugin.log(JSON.stringify({
+      plugin.log(JSON.stringify({
         title: 'Log sent to Loggentries',
         data: logData
       }))
@@ -38,22 +38,22 @@ _plugin.on('log', (logData) => {
   })
 })
 
-_plugin.once('ready', () => {
+plugin.once('ready', () => {
   const Logger = require('le_node')
 
-  level = _plugin.config.logLevel || 'info'
+  level = plugin.config.logLevel || 'info'
 
   loggentriesLogger = new Logger({
-    token: _plugin.config.token
+    token: plugin.config.token
   })
 
   loggentriesLogger.on('error', (error) => {
     console.error('Error on Logentries.', error)
-    _plugin.logException(error)
+    plugin.logException(error)
   })
 
-  _plugin.log('Logentries has been initialized.')
-  _plugin.emit('init')
+  plugin.log('Logentries has been initialized.')
+  plugin.emit('init')
 })
 
-module.exports = _plugin
+module.exports = plugin
