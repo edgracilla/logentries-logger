@@ -3,7 +3,6 @@ kind: Plugin
 metadata:
   name: Logentries Logger
   description: Logentries Logger Plugin for the Reekoh IoT Platform
-  documentation: README.md
   icon: asset/icon/reekoh200x200.png
   signupLink: https://myservice.com/signup # ??
   type: Logger
@@ -11,31 +10,31 @@ metadata:
   tags:
     - logger
     - logentries
-  config:
-    token:
-      label: Token
-      type: Password
-      maxLength: 1000
-      required: true
-      help: Specify your LogEntries token.
-    logLevel:
-      label: Log Level
-      type: String
-      maxLength: 1000
-      required: false
-      enum:
-        - debug
-        - info
-        - notice
-        - warning
-        - err
-        - crit
-        - alert
-        - emerg
-      default: debug
-      help: "(Optional) Specify the default log level for logs."
 
   release:
     version: 1.0.0
     notes: path/to/RELEASENOTESv1.0.0.md # ??
-    image: path/to/docker/image # ??
+    documentation: README.md
+    config:
+      token:
+        label: Token
+        type: Password
+        maxLength: 1000
+        required: true
+        help: Specify your LogEntries token.
+      logLevel:
+        label: Log Level
+        type: String
+        maxLength: 1000
+        required: false
+        enum:
+          - debug
+          - info
+          - notice
+          - warning
+          - err
+          - crit
+          - alert
+          - emerg
+        default: debug
+        help: "(Optional) Specify the default log level for logs."
